@@ -109,35 +109,35 @@ jobs:
           tags: dasmindme/kittygram_gateway:latest
 
   deploy:
-  runs-on: ubuntu-latest
-  needs: build_and_push_to_docker_hub
+    runs-on: ubuntu-latest
+    needs: build_and_push_to_docker_hub
 
-  steps:
-    - name: Check out repository code
-      uses: actions/checkout@v4
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
 
-    - name: Copy Compose file to server
-      uses: appleboy/scp-action@v0.1.7
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USER }}
-        key: ${{ secrets.SSH_KEY }}
-        source: docker-compose.production.yml
-        target: kittygram
+      - name: Copy Compose file to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: docker-compose.production.yml
+          target: kittygram
 
-    - name: Deploy on server
-      uses: appleboy/ssh-action@v1.2.0
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USER }}
-        key: ${{ secrets.SSH_KEY }}
-        script: |
-          cd kittygram
-          sudo docker compose -f docker-compose.production.yml pull
-          sudo docker compose -f docker-compose.production.yml down
-          sudo docker compose -f docker-compose.production.yml up -d
-          sudo docker compose -f docker-compose.production.yml exec -T backend python manage.py migrate
-          sudo docker compose -f docker-compose.production.yml exec -T backend python manage.py collectstatic --noinput
+      - name: Deploy on server
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd kittygram
+            sudo docker compose -f docker-compose.production.yml pull
+            sudo docker compose -f docker-compose.production.yml down
+            sudo docker compose -f docker-compose.production.yml up -d
+            sudo docker compose -f docker-compose.production.yml exec -T backend python manage.py migrate
+            sudo docker compose -f docker-compose.production.yml exec -T backend python manage.py collectstatic --noinput
 
   send_message:
     runs-on: ubuntu-latest
