@@ -1,5 +1,3 @@
-version: '3'
-
 volumes:
   pg_data:
   static:
@@ -13,7 +11,7 @@ services:
       - pg_data:/var/lib/postgresql/data
 
   backend:
-    build: ./backend/
+    image: dasmindme/kittygram_backend:latest
     env_file: .env
     depends_on:
       - db
@@ -22,15 +20,15 @@ services:
       - media:/app/media/
 
   frontend:
-    build: ./frontend/
+    image: dasmindme/kittygram_frontend:latest
     command: cp -r /app/build/. /static/
     volumes:
       - static:/static
 
   gateway:
-    build: ./nginx/
+    image: dasmindme/kittygram_gateway:latest
     ports:
-      - "9000:80"
+      - "127.0.0.1:9000:80"
     volumes:
       - static:/static/
       - media:/media/
