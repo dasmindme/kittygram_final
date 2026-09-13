@@ -1,31 +1,182 @@
-#  Как работать с репозиторием финального задания
+# Kittygram — Full-Stack Application with Docker & CI/CD
 
-## Что нужно сделать
+A full-stack web application for creating and sharing cat profiles and achievements.
 
-Настроить запуск проекта Kittygram в контейнерах и CI/CD с помощью GitHub Actions
+The project demonstrates how a React frontend and Django REST API can be containerized, connected to PostgreSQL, served through Nginx, and automatically tested and deployed using GitHub Actions.
 
-## Как проверить работу с помощью автотестов
+> **Project type:** Educational / portfolio project
+> **Focus:** Full-stack development, Docker, deployment, CI/CD
 
-В корне репозитория создайте файл tests.yml со следующим содержимым:
-```yaml
-repo_owner: ваш_логин_на_гитхабе
-kittygram_domain: полная ссылка (https://доменное_имя) на ваш проект Kittygram
-taski_domain: полная ссылка (https://доменное_имя) на ваш проект Taski
-dockerhub_username: ваш_логин_на_докерхабе
+## Key Features
+
+* User authentication
+* Create and manage cat profiles
+* Upload cat images
+* Add achievements to cat profiles
+* REST API
+* PostgreSQL database
+* Containerized frontend and backend
+* Nginx reverse proxy
+* Automated testing
+* CI/CD pipeline with GitHub Actions
+* Production deployment
+
+## 🛠 Tech Stack
+
+### Backend
+
+* **Python**
+* **Django**
+* **Django REST Framework**
+* **PostgreSQL**
+
+### Frontend
+
+* **React**
+* **JavaScript**
+
+### Infrastructure
+
+* **Docker**
+* **Docker Compose**
+* **Nginx**
+* **Gunicorn**
+* **GitHub Actions**
+
+### Testing
+
+* **Pytest**
+
+## Application Architecture
+
+The application consists of several services running in Docker containers:
+
+```text
+                    ┌──────────────┐
+                    │    Client    │
+                    └──────┬───────┘
+                           │
+                           ▼
+                    ┌──────────────┐
+                    │    Nginx     │
+                    └──────┬───────┘
+                           │
+              ┌────────────┴────────────┐
+              ▼                         ▼
+       ┌─────────────┐           ┌─────────────┐
+       │   React     │           │ Django API  │
+       │  Frontend   │           │   Backend   │
+       └─────────────┘           └──────┬──────┘
+                                        │
+                                        ▼
+                                 ┌─────────────┐
+                                 │ PostgreSQL  │
+                                 └─────────────┘
 ```
 
-Скопируйте содержимое файла `.github/workflows/main.yml` в файл `kittygram_workflow.yml` в корневой директории проекта.
+## Docker
 
-Для локального запуска тестов создайте виртуальное окружение, установите в него зависимости из backend/requirements.txt и запустите в корневой директории проекта `pytest`.
+The application is split into separate containers for the main services.
 
-## Чек-лист для проверки перед отправкой задания
+Docker Compose is used to manage the production environment and service dependencies.
 
-- Проект Taski доступен по доменному имени, указанному в `tests.yml`.
-- Проект Kittygram доступен по доменному имени, указанному в `tests.yml`.
-- Пуш в ветку main запускает тестирование и деплой Kittygram, а после успешного деплоя вам приходит сообщение в телеграм.
-- В корне проекта есть файл `kittygram_workflow.yml`.
+This makes the application easier to reproduce across different environments.
 
-## Проекты
+## CI/CD
 
-- [Kittygram](https://kittigram.ddns.net/)
-- [Taski](https://taskifinal.duckdns.org/)
+GitHub Actions is used to automate the development workflow.
+
+The pipeline can:
+
+1. Run automated tests
+2. Validate the application
+3. Build/deploy the application
+4. Notify about the deployment result
+
+This allows changes pushed to the main branch to go through an automated deployment workflow instead of requiring manual deployment steps.
+
+## Nginx
+
+Nginx is used as a reverse proxy between the client and application services.
+
+It handles routing requests to the appropriate frontend/backend service and serves static files.
+
+## Database
+
+The application uses PostgreSQL as the production database.
+
+Database migrations are handled by Django migrations.
+
+## Testing
+
+The project includes automated tests.
+
+Run the test suite with:
+
+```bash
+pytest
+```
+
+## Local Setup
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/dasmindme/kittygram_final.git
+cd kittygram_final
+```
+
+### 2. Create environment variables
+
+Create a `.env` file based on `.env.example`.
+
+Example:
+
+```env
+POSTGRES_DB=kittygram
+POSTGRES_USER=kittygram_user
+POSTGRES_PASSWORD=your_password
+DB_NAME=kittygram
+DB_HOST=db
+DB_PORT=5432
+DEBUG=False
+```
+
+### 3. Start the production environment
+
+```bash
+docker compose -f docker-compose.production.yml up --build
+```
+
+### 4. Apply migrations
+
+```bash
+docker compose -f docker-compose.production.yml exec backend python manage.py migrate
+```
+
+### 5. Collect static files
+
+```bash
+docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
+```
+
+## What This Project Demonstrates
+
+This project demonstrates practical experience with:
+
+* full-stack web applications
+* REST APIs
+* React
+* Django REST Framework
+* PostgreSQL
+* Docker and Docker Compose
+* Nginx
+* Gunicorn
+* CI/CD
+* GitHub Actions
+* automated testing
+* production deployment
+
+## About
+
+This project is part of my full-stack development portfolio and demonstrates my ability to build, containerize, test, and deploy web applications.
