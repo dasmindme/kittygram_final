@@ -21,7 +21,7 @@ The project demonstrates how a React frontend and Django REST API can be contain
 * CI/CD pipeline with GitHub Actions
 * Production deployment
 
-## 🛠 Tech Stack
+## Tech Stack
 
 ### Backend
 
